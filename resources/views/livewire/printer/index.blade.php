@@ -9,6 +9,12 @@
         </div>
     @endif
 
+    @if (session()->has('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+
     <div class="mb-4 flex justify-between items-center">
         <div class="w-1/3">
             <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search printers..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-900 placeholder-gray-400 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-2">
@@ -48,7 +54,21 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <a href="{{ route('printers.edit', $printer) }}" wire:navigate class="inline-block py-1 px-2 text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600">Edit</a>
-                            <button wire:click="initiateTestPrint({{ $printer->id }})" class="ml-2 py-1 px-2 text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer">Test Print</button>
+                            <button wire:click="initiateTestPrint({{ $printer->id }})"
+                                    wire:loading.attr="disabled"
+                                    wire:target="initiateTestPrint({{ $printer->id }})"
+                                    class="ml-2 py-1 px-2 text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer relative min-w-[100px] text-center">
+                                <span wire:loading.remove wire:target="initiateTestPrint({{ $printer->id }})">
+                                    Test Print
+                                </span>
+                                <span wire:loading wire:target="initiateTestPrint({{ $printer->id }})">
+                                    <svg class="animate-spin inline-block h-3 w-3 text-blue-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Printing...
+                                </span>
+                            </button>
                             <button wire:click="delete({{ $printer->id }})" wire:confirm="Are you sure you want to delete this printer?" class="ml-2 py-1 px-2 text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 dark:text-red-300 dark:bg-red-700 dark:hover:bg-red-600 cursor-pointer">Delete</button>
                         </td>
                     </tr>
@@ -67,7 +87,7 @@
         {{ $printers->links() }}
     </div>
 
-    @script
+    {{-- @script
     <script>
         document.addEventListener('livewire:initialized', () => {
             Livewire.on('print-receipt-content', (event) => {
@@ -138,6 +158,6 @@
             });
         });
     </script>
-    @endscript
+    @endscript --}}
 
 </div>

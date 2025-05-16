@@ -3,6 +3,7 @@
 namespace App\Livewire\Printer;
 
 use App\Models\Printer;
+use App\Services\PrinterService;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -70,7 +71,14 @@ class Index extends Component
 
         $receiptContent = implode("\n", $receipt);
 
-        $this->dispatch('print-receipt-content', content: $receiptContent);
+        $printerService = app(PrinterService::class);
+        $result = $printerService->printReceipt($printer, $receiptContent);
+
+        if ($result['status'] === 'success') {
+            session()->flash('message', $result['message']);
+        } else {
+            session()->flash('error', $result['message']);
+        }
     }
 
     private function truncateText(string $text, int $width): string
