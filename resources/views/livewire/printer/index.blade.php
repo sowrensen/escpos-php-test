@@ -47,8 +47,9 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('printers.edit', $printer) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                            <button wire:click="delete({{ $printer->id }})" wire:confirm="Are you sure you want to delete this printer?" class="text-red-600 hover:text-red-900">Delete</button>
+                            <a href="{{ route('printers.edit', $printer) }}" wire:navigate class="inline-block py-1 px-2 text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600">Edit</a>
+                            <button wire:click="initiateTestPrint({{ $printer->id }})" class="ml-2 py-1 px-2 text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 cursor-pointer">Test Print</button>
+                            <button wire:click="delete({{ $printer->id }})" wire:confirm="Are you sure you want to delete this printer?" class="ml-2 py-1 px-2 text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 dark:text-red-300 dark:bg-red-700 dark:hover:bg-red-600 cursor-pointer">Delete</button>
                         </td>
                     </tr>
                 @empty
@@ -65,4 +66,78 @@
     <div class="mt-4">
         {{ $printers->links() }}
     </div>
+
+    @script
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('print-receipt-content', (event) => {
+                let receiptContent = event.content;
+                if (!receiptContent) {
+                    console.error('No content received for printing.');
+                    return;
+                }
+
+                // Create a hidden iframe
+                const iframe = document.createElement('iframe');
+                iframe.style.position = 'absolute';
+                iframe.style.width = '0';
+                iframe.style.height = '0';
+                iframe.style.border = '0';
+                iframe.style.visibility = 'hidden';
+
+                document.body.appendChild(iframe);
+
+                // Write the content to the iframe
+                // Using <pre> for monospaced font and preserving whitespace
+                // Basic styling for receipt look
+                iframe.contentDocument.open();
+                iframe.contentDocument.write(`
+                    <html>
+                    <head>
+                        <title>Print Receipt</title>
+                        <style>
+                            body {
+                                font-family: monospace;
+                                font-size: 10pt; /* Adjust as needed */
+                                margin: 5mm; /* Adjust printer margins */
+                                width: auto; /* Allow browser to determine width for printing */
+                            }
+                            pre {
+                                white-space: pre-wrap; /* CSS3 */
+                                white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+                                white-space: -pre-wrap; /* Opera 4-6 */
+                                white-space: -o-pre-wrap; /* Opera 7 */
+                                word-wrap: break-word; /* Internet Explorer 5.5+ */
+                                margin: 0;
+                                padding: 0;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <pre>${receiptContent}</pre>
+                    </body>
+                    </html>
+                `);
+                iframe.contentDocument.close();
+
+                // Wait for iframe to load content before printing
+                iframe.onload = function() {
+                    try {
+                        iframe.contentWindow.focus(); // Required for some browsers
+                        iframe.contentWindow.print();
+                    } catch (e) {
+                        console.error('Error printing:', e);
+                        alert('Could not initiate print. Please check console for errors.');
+                    }
+                    // Clean up: remove the iframe after printing or error
+                    // Use a timeout to ensure print dialog has time to process
+                    setTimeout(() => {
+                        document.body.removeChild(iframe);
+                    }, 1000);
+                };
+            });
+        });
+    </script>
+    @endscript
+
 </div>
