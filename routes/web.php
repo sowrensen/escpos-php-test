@@ -6,7 +6,9 @@ use App\Livewire\Settings\Profile;
 use App\Livewire\Printer\Index as PrinterIndex;
 use App\Livewire\Printer\Create as PrinterCreate;
 use App\Livewire\Printer\Edit as PrinterEdit;
+use App\Livewire\QrReader\Index as QrReaderIndex;
 use Illuminate\Support\Facades\Route;
+use Zxing\QrReader;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('printers', PrinterIndex::class)->name('printers.index');
     Route::get('printers/create', PrinterCreate::class)->name('printers.create');
     Route::get('printers/{printer}/edit', PrinterEdit::class)->name('printers.edit');
+
+    // QR Code Reader Route
+    Route::get('qr-reader', QrReaderIndex::class)->name('qr-reader.index');
 });
 
 require __DIR__.'/auth.php';

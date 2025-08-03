@@ -15,6 +15,7 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     {{-- <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item> --}}
                     <flux:navlist.item icon="printer" :href="route('printers.index')" :current="request()->routeIs('printers.*')" wire:navigate>{{ __('Printers') }}</flux:navlist.item>
+                    <flux:navlist.item icon="qr-code" :href="route('qr-reader.index')" :current="request()->routeIs('qr-reader.*')" wire:navigate>{{ __('QR Reader') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
