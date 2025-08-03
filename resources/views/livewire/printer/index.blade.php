@@ -1,49 +1,49 @@
 <div>
     <div class="mb-4">
-        <h1 class="text-2xl font-semibold">Printers</h1>
+        <h1 class="text-2xl font-semibold dark:text-white">Printers</h1>
     </div>
 
     @if (session()->has('message'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 dark:bg-green-900/30 dark:border-green-500 dark:text-green-400" role="alert">
             <span class="block sm:inline">{{ session('message') }}</span>
         </div>
     @endif
 
     @if (session()->has('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 dark:bg-red-900/30 dark:border-red-500 dark:text-red-400" role="alert">
             <span class="block sm:inline">{{ session('error') }}</span>
         </div>
     @endif
 
     <div class="mb-4 flex justify-between items-center">
         <div class="w-1/3">
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search printers..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-900 placeholder-gray-400 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-2">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search printers..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-gray-900 placeholder-gray-400 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-2 dark:bg-zinc-800 dark:border-zinc-700 dark:text-gray-300 dark:placeholder-gray-500">
         </div>
-        <a href="{{ route('printers.create') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
+        <a href="{{ route('printers.create') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
             Create New Printer
         </a>
     </div>
 
-    <div class="overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <div class="overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative dark:bg-zinc-900 dark:border dark:border-zinc-700">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
+            <thead class="bg-gray-50 dark:bg-zinc-800">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPL</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Connection</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Title</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Type</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">CPL</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Connection</th>
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Actions</span>
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-zinc-900 dark:divide-zinc-700">
                 @forelse ($printers as $printer)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $printer->title }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ Str::ucfirst($printer->type) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $printer->characters_per_line }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ $printer->title }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ Str::ucfirst($printer->type) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $printer->characters_per_line }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                             @if ($printer->ip_address && $printer->port)
                                 {{ $printer->ip_address }}:{{ $printer->port }}
                             @elseif ($printer->path)
@@ -62,7 +62,7 @@
                                     Test Print
                                 </span>
                                 <span wire:loading wire:target="initiateTestPrint({{ $printer->id }})">
-                                    <svg class="animate-spin inline-block h-3 w-3 text-blue-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg class="animate-spin inline-block h-3 w-3 text-blue-700 dark:text-blue-300 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
@@ -74,7 +74,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center dark:text-gray-400">
                             No printers found.
                         </td>
                     </tr>
@@ -159,5 +159,4 @@
         });
     </script>
     @endscript --}}
-
 </div>
